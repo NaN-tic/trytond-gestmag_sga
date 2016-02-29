@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- This file is part gestmag_sga module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <!-- systemlogics.modula.product.result - Wizard -->
+        <record model="ir.ui.view" id="gestmag_product_result">
+            <field name="model">gestmag.product.result</field>
+            <field name="type">form</field>
+            <field name="name">gestmag_product_result</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_gestmag_product">
+            <field name="name">Export Products Gestmag SGA</field>
+            <field name="wiz_name">gestmag.product</field>
+            <field name="model">product.product</field>
+        </record>
+        <record model="ir.action.keyword" id="gestmag_product_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">product.product,-1</field>
+            <field name="action" ref="wizard_gestmag_product"/>
+        </record>
+        <record model="ir.action-res.group"
+            id="action_group_wizard_gestmag_product">
+            <field name="action" ref="wizard_gestmag_product"/>
+            <field name="group" ref="group_gestmag"/>
+        </record>
+    </data>
+</tryton>

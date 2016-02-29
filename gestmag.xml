@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!-- This file is part gestmag module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <!-- Groups -->
+        <record model="res.group" id="group_gestmag_admin">
+            <field name="name">Gestmag SGA Administration</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_gestmag_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_gestmag_admin"/>
+        </record>
+        <record model="res.group" id="group_gestmag">
+            <field name="name">Gestmag SGA</field>
+        </record>
+        <record model="res.user-res.group" id="user_group_gestmag">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_gestmag"/>
+        </record>
+
+        <!-- Menus -->
+        <menuitem parent="stock.menu_configuration"
+            name="Gestmag SGA" id="menu_gestmag_configuration"/>
+
+        <!-- systemlogics -->
+        <record model="ir.ui.view" id="gestmag_view_form">
+            <field name="model">gestmag</field>
+            <field name="type">form</field>
+            <field name="name">gestmag_form</field>
+        </record>
+        <record model="ir.ui.view" id="gestmag_view_tree">
+            <field name="model">gestmag</field>
+            <field name="type">tree</field>
+            <field name="name">gestmag_tree</field>
+        </record>
+
+        <!-- Actions / Menu -->
+        <record model="ir.action.act_window" id="act_gestmag_form">
+            <field name="name">Gestmag SGA</field>
+            <field name="res_model">gestmag</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_gestmag_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="gestmag_view_tree"/>
+            <field name="act_window" ref="act_gestmag_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_gestmag_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="gestmag_view_form"/>
+            <field name="act_window" ref="act_gestmag_form"/>
+        </record>
+        <menuitem parent="menu_gestmag_configuration"
+            action="act_gestmag_form"
+            id="menu_gestmag_form"/>
+
+        <!-- Access -->
+        <record model="ir.model.access" id="access_gestmag">
+            <field name="model" search="[('model', '=', 'gestmag')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_gestmag_admin">
+            <field name="model" search="[('model', '=', 'gestmag')]"/>
+            <field name="group" ref="group_gestmag_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+    </data>
+</tryton>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- This file is part gestmag_sga module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<form string="Gestmag SGA">
+    <label name="name"/>
+    <field name="name"/>
+    <label name="active"/>
+    <field name="active"/>
+    <label name="warehouse"/>
+    <field name="warehouse"/>
+    <label name="path"/>
+    <field name="path"/>
+</form>
