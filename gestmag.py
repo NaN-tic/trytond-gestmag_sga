@@ -18,7 +18,7 @@ class Gestmag(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     warehouse = fields.Many2One('stock.location', "Warehouse",
         domain=[('type', '=', 'warehouse')],
-        help='System Logics Warehouse', required=True)
+        help='Gestmag SGA Warehouse Manager', required=True)
     path = fields.Char('Path', required=True)
     active = fields.Boolean('Active', select=True)
 
