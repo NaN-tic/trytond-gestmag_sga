@@ -16,5 +16,14 @@ copyright notices and license terms. -->
         <record model="gestmag" id="gestmag_export_product">
             <field name="name">EXPORT_PRODUCT</field>
         </record>
+        <record model="gestmag" id="gestmag_export_customer">
+            <field name="name">EXPORT_CUSTOMER</field>
+        </record>
+        <record model="gestmag" id="gestmag_export_supplier">
+            <field name="name">EXPORT_SUPPLIER</field>
+        </record>
+        <record model="gestmag" id="gestmag_export_address">
+            <field name="name">EXPORT_ADDRESS</field>
+        </record>
     </data>
 </tryton>
