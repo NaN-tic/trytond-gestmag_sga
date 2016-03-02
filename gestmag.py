@@ -1,20 +1,13 @@
-#This file is part gestmag_sga module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
+# This file is part of gestmag_sga module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
 from csv import writer, QUOTE_MINIMAL
 from datetime import datetime
-from trytond.pool import Pool
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.pyson import Eval
-from trytond.transaction import Transaction
-from trytond.rpc import RPC
-from itertools import groupby
-from xml.dom.minidom import parseString
 import os
-import operator
-import logging
-import datetime
-import tempfile
+
+from trytond.pool import Pool
+
 
 __all__ = ['Gestmag']
 

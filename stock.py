@@ -1,11 +1,7 @@
-#This file is part gestmag_sga module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
+# This file is part gestmag_sga module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
 from trytond.pool import Pool, PoolMeta
-from trytond.model import  ModelView, fields
-from trytond.transaction import Transaction
-from trytond.pyson import Eval
-from trytond.wizard import Wizard, StateView, Button, StateTransition
 
 __all__ = ['ShipmentIn', 'ShipmentOut']
 __metaclass__ = PoolMeta

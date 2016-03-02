@@ -1,16 +1,19 @@
 #!/usr/bin/env python
-#This file is part gestmag_sga module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
+# This file is part gestmag_sga module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
+
+import ConfigParser
+import os
+import re
 
 from setuptools import setup
-import re
-import os
-import ConfigParser
+
 
 MODULE = 'gestmag_sga'
 PREFIX = 'trytonzz'
 MODULE2PREFIX = {}
+
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -44,7 +47,7 @@ setup(name='%s_%s' % (PREFIX, MODULE),
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-"+MODULE,
+    download_url="https://bitbucket.org/zikzakmedia/trytond-" + MODULE,
     package_dir={'trytond.modules.%s' % MODULE: '.'},
     packages=[
         'trytond.modules.%s' % MODULE,
