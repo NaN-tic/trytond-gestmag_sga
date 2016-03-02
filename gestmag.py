@@ -30,6 +30,23 @@ class Gestmag(ModelSQL, ModelView):
     active = fields.Boolean('Active', select=True)
 
     @classmethod
+    def create(cls, vlist):
+        for value in vlist:
+            if 'path' in value and not value['path'].endswith('/'):
+                value['path'] = '%s/' % value['path']
+        return super(Gestmag, cls).create(vlist)
+
+    @classmethod
+    def write(cls, *args):
+        actions = iter(args)
+        args = []
+        for gestmags, values in zip(actions, actions):
+            if 'path' in values and not values['path'].endswith('/'):
+                values['path'] = '%s/' % values['path']
+            args.extend((gestmags, values))
+        super(Gestmag, cls).write(*args)
+
+    @classmethod
     def default_warehouse(cls):
         Location = Pool().get('stock.location')
         locations = Location.search(cls.warehouse.domain)
@@ -38,7 +55,7 @@ class Gestmag(ModelSQL, ModelView):
 
     @staticmethod
     def default_path():
-        return os.path.dirname(__file__)
+        return os.path.dirname(__file__) + '/'
 
     @staticmethod
     def default_active():
