@@ -7,7 +7,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.wizard import Wizard, StateView, Button, StateTransition
 
-__all__ = ['ShipmentIn', 'ShipmentOut', 'ShipmentInternal']
+__all__ = ['ShipmentIn', 'ShipmentOut']
 __metaclass__ = PoolMeta
 
 
@@ -15,51 +15,104 @@ class ShipmentIn:
     __name__ = 'stock.shipment.in'
 
     @classmethod
-    def assign(cls, shipments):
-        super(ShipmentOut, cls).assign(shipments)
-        # control generate systemlogics module with context
-        if Transaction().context.get('generate_gestmag_sga', True):
-            cls.generate_gestmag_sga(shipments)
-
-    @classmethod
-    def generate_gestmag_sga(cls, shipments):
-        '''Create Gestmag SGA Shipment IN CSV'''
-        Gestmag = Pool().get('gestmag')
-        Gestmag.import_shipments(products)
-
-    @classmethod
     def receive(cls, shipments):
-        super(ShipmentOut, cls).receive(shipments)
-        cls.generate_gestmag_sga(shipments)
+        Party = Pool().get('party.party')
+
+        super(ShipmentIn, cls).receive(shipments)
+
+        Party.generate_gestmag_sga([s.supplier for s in shipments],
+            'EXPORT_SUPPLIER')
+        for shipment in shipments:
+            shipment.generate_gestmag_sga()
+
+    def generate_gestmag_sga(self):
+        Gestmag = Pool().get('gestmag')
+
+        gestmags = Gestmag.search([
+            ('name', '=', 'EXPORT_SHIPMENT_IN'),
+            ('warehouse', '=', self.warehouse),
+            ])
+        if gestmags:
+            gestmag = gestmags[0]
+            headers = [
+                'EMPRESA',
+                'NUMPED',
+                'NUMLIN',
+                'CODALM',
+                'FECHA',
+                'CODART',
+                'UNIDADES',
+                'NUMLOTE',
+                ]
+            rows = [
+                [
+                    self.company.party.code,
+                    self.code,
+                    move.id,
+                    self.warehouse.name.encode('utf-8'),
+                    self.effective_date
+                        and self.effective_date.strftime('%d%m%Y') or '',
+                    move.product.code,
+                    move.quantity,
+                    '',  # Not implemented
+                    ] for move in self.incoming_moves]
+            gestmag.export_file(rows, headers)
 
 
 class ShipmentOut:
     __name__ = 'stock.shipment.out'
 
     @classmethod
-    def generate_gestmag_sga(cls, shipments):
-        '''Create Gestmag SGA Shipment OUT CSV'''
-        Gestmag = Pool().get('gestmag')
-        Gestmag.export_shipments(products)
-
-    @classmethod
     def assign(cls, shipments):
+        Party = Pool().get('party.party')
+
         super(ShipmentOut, cls).assign(shipments)
-        # control generate systemlogics module with context
-        if Transaction().context.get('generate_gestmag_sga', True):
-            cls.generate_gestmag_sga(shipments)
 
+        Party.generate_gestmag_sga([s.customer for s in shipments],
+            'EXPORT_CUSTOMER')
+        for shipment in shipments:
+            shipment.generate_gestmag_sga()
 
-class ShipmentInternal:
-    __name__ = 'stock.shipment.internal'
-
-    @classmethod
-    def generate_gestmag_sga(cls, shipments):
-        '''Create Gestmag SGA Shipment Internal CSV'''
+    def generate_gestmag_sga(self):
         Gestmag = Pool().get('gestmag')
-        Gestmag.export_shipments(products)
 
-    @classmethod
-    def assign(cls, shipments):
-        super(ShipmentInternal, cls).assign(shipments)
-        cls.generate_gestmag_sga(shipments)
+        gestmags = Gestmag.search([
+            ('name', '=', 'EXPORT_SHIPMENT_OUT'),
+            ('warehouse', '=', self.warehouse),
+            ])
+        if gestmags:
+            gestmag = gestmags[0]
+            headers = [
+                'EMPRESA',
+                'NUMENV',
+                'NUMPED',
+                'NUMLIN',
+                'CODALM',
+                'CODART',
+                'UNIDADES',
+                'CODCLI',
+                'CODDIR',
+                'EXPE',
+                'PEDCLI',
+                'F_PEDIDO',
+                'F_ENTREGA',
+                ]
+            rows = [
+                [
+                    self.company.party.code,
+                    getattr(move, 'origin', '')
+                        and getattr(move.origin, 'reference', ''),
+                    self.code,
+                    move.id,
+                    self.warehouse.name.encode('utf-8'),
+                    move.product.code,
+                    move.quantity,
+                    self.customer.code,
+                    self.delivery_address.name,
+                    '',  # Not implemented
+                    '',  # Not implemented
+                    self.create_date.strftime('%d%m%Y'),
+                    self.effective_date
+                        and self.effective_date.strftime('%d%m%Y') or '',
+                    ] for move in self.outgoing_moves]
+            gestmag.export_file(rows, headers)
