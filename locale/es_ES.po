@@ -1,3 +1,103 @@
 #
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:gestmag.product:"
+msgid "Exported %s product/s to Gestmat SGA"
+msgstr "Exportados %s producto/s a Gestmag SGA"
+
+msgctxt "field:gestmag,active:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "field:gestmag,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:gestmag,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:gestmag,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:gestmag,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:gestmag,path:"
+msgid "Path"
+msgstr "Ruta"
+
+msgctxt "field:gestmag,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:gestmag,warehouse:"
+msgid "Warehouse"
+msgstr "Almacén"
+
+msgctxt "field:gestmag,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:gestmag,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:gestmag.product.result,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:gestmag.product.result,info:"
+msgid "Info"
+msgstr "Información"
+
+msgctxt "help:gestmag,warehouse:"
+msgid "Gestmag SGA Warehouse Manager"
+msgstr "Administrador de magatzem Gestamag SGA"
+
+msgctxt "model:gestmag,name:"
+msgid "Gestmag"
+msgstr "Gestmag"
+
+msgctxt "model:gestmag.product.result,name:"
+msgid "Gestmag Product Result"
+msgstr "Resultado de producto Gestmag"
+
+msgctxt "model:ir.action,name:act_gestmag_form"
+msgid "Gestmag SGA"
+msgstr "Gestmag SGA"
+
+msgctxt "model:ir.action,name:wizard_gestmag_product"
+msgid "Export Products Gestmag SGA"
+msgstr "Exportar productos a Gestmag SGA"
+
+msgctxt "model:ir.ui.menu,name:menu_gestmag_configuration"
+msgid "Gestmag SGA"
+msgstr "Gestmag SGA"
+
+msgctxt "model:ir.ui.menu,name:menu_gestmag_form"
+msgid "Gestmag SGA"
+msgstr "Gestmag SGA"
+
+msgctxt "model:res.group,name:group_gestmag"
+msgid "Gestmag SGA"
+msgstr "Gestmag SGA"
+
+msgctxt "model:res.group,name:group_gestmag_admin"
+msgid "Gestmag SGA Administration"
+msgstr "Administración Gestmag SGA"
+
+msgctxt "view:gestmag.product.result:"
+msgid "Export product/s to Gestmag SGA"
+msgstr "Exportar producto/s a Gestmag SGA"
+
+msgctxt "view:gestmag:"
+msgid "Gestmag SGA"
+msgstr "Gestmag SGA"
+
+msgctxt "wizard_button:gestmag.product,result,end:"
+msgid "Close"
+msgstr "Cerrar"
