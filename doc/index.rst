@@ -1,4 +1,4 @@
 Gestmag SGA Modula Module
 #########################
 
-Integration Gestmag SGA warehouse system.
+Integration with Gestmag SGA warehouse system.
