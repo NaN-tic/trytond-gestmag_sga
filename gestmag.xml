@@ -23,7 +23,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <menuitem parent="stock.menu_configuration"
             name="Gestmag SGA" id="menu_gestmag_configuration"/>
 
-        <!-- systemlogics -->
+        <!-- gestmag -->
         <record model="ir.ui.view" id="gestmag_view_form">
             <field name="model">gestmag</field>
             <field name="type">form</field>
