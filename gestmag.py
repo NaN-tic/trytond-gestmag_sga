@@ -1,6 +1,8 @@
 #This file is part gestmag_sga module for Tryton.
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
+from csv import writer, QUOTE_MINIMAL
+from datetime import datetime
 from trytond.pool import Pool
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import Eval
@@ -51,12 +53,15 @@ class Gestmag(ModelSQL, ModelView):
         '''Export shipments'''
         # TODO + watch dir
 
-    @classmethod
-    def export_shipments(self, shipments):
-        '''Export shipments'''
-        # TODO
-
-    @classmethod
-    def export_products(self, products):
-        '''Export products'''
-        # TODO
+    def export_file(self, rows, headers=None):
+        '''
+        :param rows: List of lists with values of the csv file
+        :param headers: List of column headers of the csv file
+        '''
+        file_name = '%s%s_%s.csv' % (self.path, self.name.lower(),
+            datetime.today().strftime('%Y%m%d%H%M%S%f'))
+        with open(file_name, 'w') as csv_file:
+            csv = writer(csv_file, quoting=QUOTE_MINIMAL, delimiter=';')
+            if headers:
+                csv.writerow(headers)
+            csv.writerows(rows)
