@@ -21,6 +21,36 @@ class ShipmentIn:
         for shipment in shipments:
             shipment.generate_gestmag_sga()
 
+    @classmethod
+    def gestmag_sga_headers(cls):
+        'Return header CSV'
+        return [
+            'EMPRESA',
+            'NUMPED',
+            'NUMLIN',
+            'CODALM',
+            'FECHA',
+            'CODART',
+            'UNIDADES',
+            'NUMLOTE',
+            ]
+
+    def gestmag_sga_rows(self):
+        'Return rows CSV'
+        rows = [
+            [
+                self.company.party.code,
+                self.code,
+                move.id,
+                self.warehouse.name.encode('utf-8'),
+                self.effective_date
+                    and self.effective_date.strftime('%d%m%Y') or '',
+                move.product.code,
+                move.quantity,
+                '',  # Not implemented
+                ] for move in self.incoming_moves]
+        return rows
+
     def generate_gestmag_sga(self):
         Gestmag = Pool().get('gestmag')
 
@@ -30,28 +60,8 @@ class ShipmentIn:
             ])
         if gestmags:
             gestmag = gestmags[0]
-            headers = [
-                'EMPRESA',
-                'NUMPED',
-                'NUMLIN',
-                'CODALM',
-                'FECHA',
-                'CODART',
-                'UNIDADES',
-                'NUMLOTE',
-                ]
-            rows = [
-                [
-                    self.company.party.code,
-                    self.code,
-                    move.id,
-                    self.warehouse.name.encode('utf-8'),
-                    self.effective_date
-                        and self.effective_date.strftime('%d%m%Y') or '',
-                    move.product.code,
-                    move.quantity,
-                    '',  # Not implemented
-                    ] for move in self.incoming_moves]
+            headers = self.gestmag_sga_headers()
+            rows = self.gestmag_sga_rows()
             gestmag.export_file(rows, headers)
 
 
@@ -69,6 +79,47 @@ class ShipmentOut:
         for shipment in shipments:
             shipment.generate_gestmag_sga()
 
+    @classmethod
+    def gestmag_sga_headers(cls):
+        'Return header CSV'
+        return [
+            'EMPRESA',
+            'NUMENV',
+            'NUMPED',
+            'NUMLIN',
+            'CODALM',
+            'CODART',
+            'UNIDADES',
+            'CODCLI',
+            'CODDIR',
+            'EXPE',
+            'PEDCLI',
+            'F_PEDIDO',
+            'F_ENTREGA',
+            ]
+
+    def gestmag_sga_rows(self):
+        'Return rows CSV'
+        rows = [
+            [
+                self.company.party.code,
+                getattr(move, 'origin', '')
+                    and getattr(move.origin, 'reference', ''),
+                self.code,
+                move.id,
+                self.warehouse.name.encode('utf-8'),
+                move.product.code,
+                move.quantity,
+                self.customer.code,
+                self.delivery_address.name,
+                '',  # Not implemented
+                '',  # Not implemented
+                self.create_date.strftime('%d%m%Y'),
+                self.effective_date
+                    and self.effective_date.strftime('%d%m%Y') or '',
+                ] for move in self.outgoing_moves]
+        return rows
+
     def generate_gestmag_sga(self):
         Gestmag = Pool().get('gestmag')
 
@@ -78,37 +129,6 @@ class ShipmentOut:
             ])
         if gestmags:
             gestmag = gestmags[0]
-            headers = [
-                'EMPRESA',
-                'NUMENV',
-                'NUMPED',
-                'NUMLIN',
-                'CODALM',
-                'CODART',
-                'UNIDADES',
-                'CODCLI',
-                'CODDIR',
-                'EXPE',
-                'PEDCLI',
-                'F_PEDIDO',
-                'F_ENTREGA',
-                ]
-            rows = [
-                [
-                    self.company.party.code,
-                    getattr(move, 'origin', '')
-                        and getattr(move.origin, 'reference', ''),
-                    self.code,
-                    move.id,
-                    self.warehouse.name.encode('utf-8'),
-                    move.product.code,
-                    move.quantity,
-                    self.customer.code,
-                    self.delivery_address.name,
-                    '',  # Not implemented
-                    '',  # Not implemented
-                    self.create_date.strftime('%d%m%Y'),
-                    self.effective_date
-                        and self.effective_date.strftime('%d%m%Y') or '',
-                    ] for move in self.outgoing_moves]
+            headers = self.gestmag_sga_headers()
+            rows = self.gestmag_sga_rows()
             gestmag.export_file(rows, headers)

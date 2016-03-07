@@ -30,66 +30,77 @@ class Product:
             cls.generate_gestmag_sga(products)
 
     @classmethod
+    def gestmag_sga_headers(cls):
+        'Return header CSV'
+        return [
+            'EMPRESA',
+            'CODFAM',
+            'CODSUBFAM',
+            'CODART',
+            'DESCR',
+            'EAN_ART',
+            'EAN_UV',
+            'TIPO_UT',
+            'UTxUV',
+            'T_PAL',
+            'UxP',
+            'PBxU',
+            'C_ALTO',
+            'C_ANCHO',
+            'C_FONDO',
+            'F_ACT',
+            ]
+
+    @classmethod
+    def gestmag_sga_rows(cls, company, products):
+        'Return rows CSV'
+        today = datetime.today().strftime('%d%m%Y')
+
+        rows = []
+        for product in products:
+            template = product.template
+            rows.append([
+                    company.party.code.encode('utf-8'),
+                    template.category.parent.name.encode('utf-8')
+                        if template.category and template.category.parent
+                        else '',
+                    template.category.name.encode('utf-8')
+                        if template.category else '',
+                    product.code.encode('utf-8') if product.code else '',
+                    template.name.encode('utf-8'),
+                    product.code_ean13 or ''
+                    '',  # Not implemented
+                    template.default_uom.name,
+                    template.sale_uom.factor
+                        if template.sale_uom and template.sale_uom.factor
+                        else '',
+                    template.sale_uom.name
+                        if template.sale_uom else '',
+                    0,  # Not implemented
+                    0,  # Not implemented
+                    0,  # Not implemented
+                    0,  # Not implemented
+                    0,  # Not implemented
+                    0,  # Not implemented
+                    today,
+                    ])
+        return rows
+
+    @classmethod
     def generate_gestmag_sga(cls, products):
         pool = Pool()
         Gestmag = pool.get('gestmag')
         Company = pool.get('company.company')
 
         company = Company(Transaction().context.get('company'))
-        company_code = company.party.code
-        today = datetime.today().strftime('%d%m%Y')
 
         gestmags = Gestmag.search([
             ('name', '=', 'EXPORT_PRODUCT'),
             ])
         if gestmags:
             gestmag = gestmags[0]
-            headers = [
-                'EMPRESA',
-                'CODFAM',
-                'CODSUBFAM',
-                'CODART',
-                'DESCR',
-                'EAN_ART',
-                'EAN_UV',
-                'TIPO_UT',
-                'UTxUV',
-                'T_PAL',
-                'UxP',
-                'PBxU',
-                'C_ALTO',
-                'C_ANCHO',
-                'C_FONDO',
-                'F_ACT',
-                ]
-            rows = []
-            for product in products:
-                template = product.template
-                rows.append([
-                        company_code.encode('utf-8'),
-                        template.category.parent.name.encode('utf-8')
-                            if template.category and template.category.parent
-                            else '',
-                        template.category.name.encode('utf-8')
-                            if template.category else '',
-                        product.code.encode('utf-8') if product.code else '',
-                        template.name.encode('utf-8'),
-                        product.code_ean13 or ''
-                        '',  # Not implemented
-                        template.default_uom.name,
-                        template.sale_uom.factor
-                            if template.sale_uom and template.sale_uom.factor
-                            else '',
-                        template.sale_uom.name
-                            if template.sale_uom else '',
-                        0,  # Not implemented
-                        0,  # Not implemented
-                        0,  # Not implemented
-                        0,  # Not implemented
-                        0,  # Not implemented
-                        0,  # Not implemented
-                        today,
-                        ])
+            headers = cls.gestmag_sga_headers()
+            rows = cls.gestmag_sga_rows(company, products)
             gestmag.export_file(rows, headers)
 
 
