@@ -6,10 +6,10 @@ from trytond.transaction import Transaction
 
 
 __all__ = ['Party', 'Address']
-__metaclass__ = PoolMeta
 
 
 class Party:
+    __metaclass__ = PoolMeta
     __name__ = 'party.party'
 
     @classmethod
@@ -75,6 +75,7 @@ class Party:
 
 
 class Address:
+    __metaclass__ = PoolMeta
     __name__ = 'party.address'
 
     @classmethod

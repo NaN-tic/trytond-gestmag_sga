@@ -10,10 +10,10 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 
 
 __all__ = ['Product', 'GestmagProduct', 'GestmagProductResult']
-__metaclass__ = PoolMeta
 
 
 class Product:
+    __metaclass__ = PoolMeta
     __name__ = 'product.product'
 
     @classmethod
