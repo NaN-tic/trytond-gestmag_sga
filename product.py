@@ -59,13 +59,12 @@ class Product:
         rows = []
         for product in products:
             template = product.template
+            category = template.categories[0] if template.categories else None
             rows.append([
                     company.party.code.encode('utf-8'),
-                    template.category.parent.name.encode('utf-8')
-                        if template.category and template.category.parent
-                        else '',
-                    template.category.name.encode('utf-8')
-                        if template.category else '',
+                    category.parent.name.encode('utf-8')
+                        if category and category.parent else '',
+                    category.name.encode('utf-8') if category else '',
                     product.code.encode('utf-8') if product.code else '',
                     template.name.encode('utf-8'),
                     product.code_ean13 or ''

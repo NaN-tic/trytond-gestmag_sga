@@ -1,15 +1,17 @@
 # This file is part of gestmag_sga module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+import os
 from csv import writer, QUOTE_MINIMAL
 from datetime import datetime
-from trytond.model import ModelView, ModelSQL, fields
-import os
-
 from trytond.pool import Pool
-
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.config import config as config_
+from trytond import backend
 
 __all__ = ['Gestmag']
+
+GESTMAG_PATH = config_.get('gestmag_sga', 'path', default='/tmp')
 
 
 class Gestmag(ModelSQL, ModelView):
@@ -19,25 +21,17 @@ class Gestmag(ModelSQL, ModelView):
     warehouse = fields.Many2One('stock.location', "Warehouse",
         domain=[('type', '=', 'warehouse')],
         help='Gestmag SGA Warehouse Manager', required=True)
-    path = fields.Char('Path', required=True)
+    path = fields.Char('Path',
+        help='Use other directory path that global configuration')
     active = fields.Boolean('Active', select=True)
 
     @classmethod
-    def create(cls, vlist):
-        for value in vlist:
-            if 'path' in value and not value['path'].endswith('/'):
-                value['path'] = '%s/' % value['path']
-        return super(Gestmag, cls).create(vlist)
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        table = TableHandler(cls, module_name)
 
-    @classmethod
-    def write(cls, *args):
-        actions = iter(args)
-        args = []
-        for gestmags, values in zip(actions, actions):
-            if 'path' in values and not values['path'].endswith('/'):
-                values['path'] = '%s/' % values['path']
-            args.extend((gestmags, values))
-        super(Gestmag, cls).write(*args)
+        super(Gestmag, cls).__register__(module_name)
+        table.not_null_action('path', 'remove')
 
     @classmethod
     def default_warehouse(cls):
@@ -45,10 +39,6 @@ class Gestmag(ModelSQL, ModelView):
         locations = Location.search(cls.warehouse.domain)
         if locations:
             return locations[0].id
-
-    @staticmethod
-    def default_path():
-        return os.path.dirname(__file__) + '/'
 
     @staticmethod
     def default_active():
@@ -68,7 +58,8 @@ class Gestmag(ModelSQL, ModelView):
         :param rows: List of lists with values of the csv file
         :param headers: List of column headers of the csv file
         '''
-        file_name = '%s%s_%s.csv' % (self.path, self.name.lower(),
+        path = self.path if self.path else GESTMAG_PATH
+        file_name = '%s/%s_%s.csv' % (path, self.name.lower(),
             datetime.today().strftime('%Y%m%d%H%M%S%f'))
         with open(file_name, 'w') as csv_file:
             csv = writer(csv_file, quoting=QUOTE_MINIMAL, delimiter=';')
