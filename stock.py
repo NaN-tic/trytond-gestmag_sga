@@ -40,7 +40,7 @@ class ShipmentIn:
         rows = [
             [
                 self.company.party.code,
-                self.code,
+                self.number,
                 move.id,
                 self.warehouse.name.encode('utf-8'),
                 self.effective_date
@@ -106,7 +106,7 @@ class ShipmentOut:
                 self.company.party.code,
                 getattr(move, 'origin', '')
                     and getattr(move.origin, 'reference', ''),
-                self.code,
+                self.number,
                 move.id,
                 self.warehouse.name.encode('utf-8'),
                 move.product.code,
